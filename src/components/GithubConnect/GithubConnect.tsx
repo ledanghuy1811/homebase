@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import HeadlessTippy from '@tippyjs/react/headless';
+import dotenv from 'dotenv';
+import { useLocation } from 'react-router-dom';
 
 import styles from './GithubConnect.scss';
 import 'tippy.js/dist/tippy.css'; // optional for styling
@@ -10,11 +12,39 @@ import { ReactComponent as GitICon } from 'assets/images/git-logo.svg';
 import ConnectedImg from 'assets/images/connected-img.png';
 import DropdownIcon from 'assets/icons/nav-arrow-down.svg';
 import LogoutIcon from 'assets/icons/logout-git.svg';
+import { getGithubCode, setGithubCode } from 'utils/githubCode';
 
 const GithubConnect: React.FC = () => {
   const cx = classNames.bind(styles);
-  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const { pathname, search } = useLocation();
+
+  const [isConnected, setIsConnected] = useState<boolean>(() => {
+    if (!getGithubCode()) {
+      return false;
+    }
+
+    return true;
+  });
   const [credit, setCredit] = useState<number>(152);
+
+  const handleConnectGithub = () => {
+    console.log('client id: ', process.env.REACT_APP_GITHUB_CLIENT_ID);
+    window.location.assign(
+      `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`
+    );
+  };
+
+  useEffect(() => {
+    if (pathname === '/abc') {
+      const urlParams = new URLSearchParams(search);
+      const code = urlParams.get('code');
+
+      if (code && !getGithubCode()) {
+        setGithubCode(code);
+        setIsConnected(true);
+      }
+    }
+  }, [pathname]);
 
   return (
     <div className={cx('wrapper')}>
@@ -69,9 +99,7 @@ const GithubConnect: React.FC = () => {
         <div className={cx('connected-btn')}>
           <Button
             type="third"
-            onClick={() => {
-              setIsConnected(!isConnected);
-            }}
+            onClick={handleConnectGithub}
             icon={<GitICon />}
             style={{ paddingLeft: 14, paddingRight: 14 }}
           >

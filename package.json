@@ -33,6 +33,7 @@
     "big-integer": "^1.6.52",
     "bitcoin-units": "^1.0.0",
     "classnames": "^2.2.6",
+    "dotenv": "^16.4.5",
     "ethers": "^5.0.15",
     "idb-keyval": "^6.2.1",
     "lightweight-charts": "^4.1.3",

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames/bind';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import styles from './GithubLogin.module.scss';
 import { Button } from 'components/Button';
@@ -9,10 +9,7 @@ import { getGithubCode } from 'utils/githubCode';
 const cx = classNames.bind(styles);
 
 const GithubLogin: React.FC = () => {
-  const { search } = useLocation();
-  const urlParams = new URLSearchParams(search);
-  const code = urlParams.get('code');
-  const isConnected = code || getGithubCode() ? true : false;
+  const isConnected = getGithubCode() ? true : false;
 
   return (
     <div className={cx('wrapper')}>

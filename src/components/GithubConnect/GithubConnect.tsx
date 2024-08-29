@@ -3,6 +3,7 @@ import classNames from 'classnames/bind';
 import HeadlessTippy from '@tippyjs/react/headless';
 import dotenv from 'dotenv';
 import { useLocation } from 'react-router-dom';
+import crypto from 'crypto';
 
 import styles from './GithubConnect.module.scss';
 import 'tippy.js/dist/tippy.css'; // optional for styling
@@ -12,7 +13,7 @@ import { ReactComponent as GitICon } from 'assets/images/git-logo.svg';
 import ConnectedImg from 'assets/images/connected-img.png';
 import DropdownIcon from 'assets/icons/nav-arrow-down.svg';
 import LogoutIcon from 'assets/icons/logout-git.svg';
-import { getGithubCode, setGithubCode } from 'utils/githubCode';
+import { getGithubCode, getLatestCsrf, removeLatestCsrf, setGithubCode, setLatestCsrf } from 'utils/githubCode';
 
 const GithubConnect: React.FC = () => {
   const cx = classNames.bind(styles);
@@ -28,18 +29,22 @@ const GithubConnect: React.FC = () => {
   const [credit, setCredit] = useState<number>(152);
 
   const handleConnectGithub = () => {
-    console.log('client id: ', process.env.REACT_APP_GITHUB_CLIENT_ID);
+    const csrf = crypto.randomBytes(16).toString('hex');
+    setLatestCsrf(csrf);
+
     window.location.assign(
-      `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`
+      `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&state=${csrf}`
     );
   };
 
   useEffect(() => {
-    if (pathname === '/abc') {
+    if (pathname === '/github-login') {
       const urlParams = new URLSearchParams(search);
       const code = urlParams.get('code');
+      const latestCsrf = urlParams.get('state');
 
-      if (code && !getGithubCode()) {
+      if (code && !getGithubCode() && latestCsrf && getLatestCsrf() && latestCsrf === getLatestCsrf()) {
+        removeLatestCsrf();
         setGithubCode(code);
         setIsConnected(true);
       }

@@ -13,7 +13,14 @@ import { ReactComponent as GitICon } from 'assets/images/git-logo.svg';
 import ConnectedImg from 'assets/images/connected-img.png';
 import DropdownIcon from 'assets/icons/nav-arrow-down.svg';
 import LogoutIcon from 'assets/icons/logout-git.svg';
-import { getGithubCode, getLatestCsrf, removeLatestCsrf, setGithubCode, setLatestCsrf } from 'utils/githubCode';
+import {
+  getGithubCode,
+  getLatestCsrf,
+  removeGithubCode,
+  removeLatestCsrf,
+  setGithubCode,
+  setLatestCsrf
+} from 'utils/githubCode';
 
 const GithubConnect: React.FC = () => {
   const cx = classNames.bind(styles);
@@ -64,19 +71,23 @@ const GithubConnect: React.FC = () => {
           interactive
           trigger="click"
           render={(attrs) => {
-            const options: { name: string; icon?: string }[] = [
+            const options: { name: string; icon?: string; onCLick?: React.MouseEventHandler<HTMLDivElement> }[] = [
               {
                 name: 'Manage your credits'
               },
               {
                 name: 'Log out',
-                icon: LogoutIcon
+                icon: LogoutIcon,
+                onCLick: () => {
+                  removeGithubCode();
+                  setIsConnected(false);
+                }
               }
             ];
             return (
               <div className={cx('connected-modal')}>
                 {options.map((option, index) => (
-                  <div key={index} className={cx('connected-modal-option')}>
+                  <div key={index} className={cx('connected-modal-option')} onClick={option.onCLick}>
                     <h1 className={cx('modal-option-name')}>{option.name}</h1>
                     {option.icon && <img src={option.icon} alt={`${option.name} icon`} />}
                   </div>

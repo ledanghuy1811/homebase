@@ -1,16 +1,20 @@
-const GITHUB_CODE_NAME = 'github_code';
+const GITHUB_CODE = 'github_code';
 const LATEST_CSRF_TOKEN = 'latest_csrf_token';
 
 export const setGithubCode = (code: string) => {
-  if (localStorage.getItem(GITHUB_CODE_NAME)) {
+  if (localStorage.getItem(GITHUB_CODE)) {
     return;
   }
 
-  localStorage.setItem(GITHUB_CODE_NAME, code);
+  localStorage.setItem(GITHUB_CODE, code);
 };
 
 export const getGithubCode = () => {
-  return localStorage.getItem(GITHUB_CODE_NAME);
+  return localStorage.getItem(GITHUB_CODE);
+};
+
+export const removeGithubCode = () => {
+  localStorage.removeItem(GITHUB_CODE);
 };
 
 export const setLatestCsrf = (csrf: string) => {

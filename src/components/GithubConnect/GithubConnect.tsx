@@ -4,7 +4,7 @@ import HeadlessTippy from '@tippyjs/react/headless';
 import dotenv from 'dotenv';
 import { useLocation } from 'react-router-dom';
 
-import styles from './GithubConnect.scss';
+import styles from './GithubConnect.module.scss';
 import 'tippy.js/dist/tippy.css'; // optional for styling
 
 import { Button } from 'components/Button';
